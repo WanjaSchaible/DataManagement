@@ -1,0 +1,629 @@
+<!DOCTYPE HTML>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="css/prism.css" rel="stylesheet" />
+<title>Rcpp Intro</title>
+<meta name="description" content="An introduction to the Bigg HTML web template.">
+<meta name="robots" content="noodp,noydir">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" id="child-theme-css" href="css/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="responsive-main-css-css" href="css/responsive-main.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="responsive-css-css" href="css/responsive.css" type="text/css" media="all">
+<link rel="stylesheet" id="tb_styles-css" href="css/tb-styles.min.css" type="text/css" media="all">
+
+<script type="text/javascript" src="js/jquery.js"></script>
+
+<script>
+  jQuery(window).scroll(function (event) {
+	  	
+		var top = jQuery('#popular-upcoming').offset().top - jQuery(document).scrollTop();;
+		// what the y position of the scroll is
+		var y = jQuery(this).scrollTop();
+		// whether that's below the form
+		if (y >= top)  {
+		// if so, add the active class to popular-upcoming and remove from content
+		jQuery('.page-nav-popular-posts').addClass('active');
+		jQuery('.page-nav-top-posts').removeClass('active');
+		} else {
+		// otherwise remove it
+		jQuery('.page-nav-popular-posts').removeClass('active');
+		jQuery('.page-nav-top-posts').addClass('active');
+	   }
+  });
+  
+  jQuery(document).ready(function (){
+  jQuery('#popular-scroll').click(function (){
+            //jQuery(this).animate(function(){
+                jQuery('html, body').animate({
+                    scrollTop: jQuery('#popular-upcoming').offset().top
+                     }, 2000);
+            //});
+        });
+		
+		jQuery('#feature-scroll').click(function (){
+            //jQuery(this).animate(function(){
+                jQuery('html, body').animate({
+                    scrollTop: jQuery('#inner').offset().top
+                     }, 2000);
+            //});
+        });
+		  });
+	  </script>
+</head>
+<!--single single-post postid-5 single-format-standard header-full-width sidebar-content-->
+<body class="home blog header-full-width full-width-content">
+  <div id="header">
+  <div class="site-header">
+    <h1 class="site-nav">
+    <strong>Rcpp Intro</strong> 
+    </h1>
+      <!-- site-header-logo-container -->
+      <div id="site-nav" class="horizontal-list"><div class="horizontal-list"><ul id="menu-main-menu" class="menu"><li id="menu-item-144" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-144"><a href="index.html"><strong>Home</strong></a></li>
+<li id="menu-item-1" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-142 current_page_item"><a href="research.html"><strong>Research</strong></a></li>
+<li id="menu-item-2" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-146 current_page_item"><a href="cv.html"><strong>CV</strong></a></li>
+<li id="menu-item-3" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-148 current_page_item"><a href="teaching.html"><strong>Workshops and Teaching</strong></a></li>
+<li id="menu-item-4" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-148 current_page_item"><a href="resources.html"><strong>Resources</strong></a></li>
+<li id="menu-item-5" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-148 current_page_item"><a href="blog.html"><strong>Blog</strong></a></li>
+
+</ul></div></div><!-- #site-nav -->
+<div id="site-header-bigg-social">
+<ul class="horizontal-list">
+<li><a href="https://twitter.com/MatthewJDenny" target="_blank" class="bigg-social-twitter bigg-social-icon image-replace">Twitter</a></li>
+      
+  
+    </div>  
+    </div>
+  </div>
+  <div id="wrap">
+  <div id="inner">
+	<div class="wrap">	
+		<div id="content-sidebar-wrap"> 
+				<div id="content" class="hfeed">
+
+
+
+
+<div class="post-10 post type-post status-publish format-standard hentry category-featured category-parent-category-i entry feature feature">
+<h1 class="entry-title", name = "Data Science Tools">Using C++ and R code Together with Rcpp</h1> 	
+<div class="entry-content">
+
+<p> This tutorial was originally presented as part of a 3-day intensive Data Science Workshop at UMass Amherst in June 2015. The materials for this workshop are all available on Github at the following link:  <a href="https://github.com/matthewjdenny/ISSR_Data_Science_Summer_Summit_15">https://github.com/matthewjdenny/ISSR_Data_Science_Summer_Summit_15</a>
+
+<h2>Overview</h2>
+
+<p>R can be perfectly fast for some things but sometimes too slow for other things. In general, R is not the fastest or most memory efficient language out there -- but it is very easy to use, to share, and makes very pretty output. C++ is very fast, but not so easy to use, and was not designed with making pretty output in mind. However, when we put the two together in a smart way, we can both go fast and write code that is relatively easy to use. </p>
+
+<h2>Requirements for using C++ code with R</h2>
+
+<p>If you are using a Mac, you will need to start by making sure you have Xcode + developer tools installed or you will not be able to compile the C++ code that is used in the samplers for this package. You will need to go here: <a href="https://developer.apple.com/xcode/downloads/">https://developer.apple.com/xcode/downloads/</a> and then select the link to the additional downloads page which will prompt you to enter you apple ID. This will let you download the developer tools. This requirement is not unique to any particular package, but is necessary for all packages that use Rcpp.   </p>
+
+<p>If you are using certain version of OSX (at least Mavericks, but possibly others), you will also likely get an <code>-lgfortran</code> or <code>-lquadmath</code> error the first time you try to compile some C++ code using R. This error is <a href="http://www.thecoatlessprofessor.com/programming/rcpp-rcpparmadillo-and-os-x-mavericks-lgfortran-and-lquadmath-error">detailed here</a>, along with very nice instructions for fixing it. The simple solution is to open up a Terminal (by going to <strong>Applications -> Utilities -> Terminal</strong>) and paste the following two lines of code into the terminal. Note that by using the <code>sudo</code> command, you will be asked to enter your password. If you encounter an error, you can <a href="https://support.apple.com/en-us/HT204012">check out this page</a> for instructions on enabling <code>sudo</code> on a mac. Once you have entered the code (if you did not get any error messages) then you should be fine to try sourcing C++ code again.</p>
+
+<pre><code>curl -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2
+sudo tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /
+</code></pre>
+
+<p>If you are using a Windows machine, you will need to make sure you have the latest release of R (3.2.0+) and will also need to install the <code>Rtools</code> library (available here <a href="http://cran.r-project.org/bin/windows/Rtools/">http://cran.r-project.org/bin/windows/Rtools/</a>) before you can use any packages with C++ code in them. Note that you should choose whichever is the latest version of <code>Rtools</code> when asked to select a version on the website. I have found that some people encounter strange errors where R keeps asking them to install <code>Rtools</code> repeatedly. If this is the case for you, I suggest you try restarting your computer as this tends to be a problem with certain older versions of Windows and not a general problem for Windows (it works just fine for the vast majority of folks). It is also highly advised that you use <a href="http://www.rstudio.com/">RStudio</a> to download and install the package as it seems to play nicer with Rcpp under Windows. You may also want to visit <a href="https://cdrv.wordpress.com/2013/01/12/getting-compilers-to-work-with-rcpp-rcpparmadillo/">this blog post</a> which has more information on making C++ work with R under Windows if you end up encountering any weirdness. </p>
+
+<p>If you are using a Linux distro, make sure you have a C++ complier installed, but in general, you should not run into as many issues</p>
+
+<h2>Rcpp, RcppArmadillo and RStudio</h2>
+
+<p>This is where <code>Rcpp</code> comes in. It is an R package that makes incorporating C++ code with R code pretty straightforward. The good folks over at RStudio have also baked in a lot of support for Rcpp right into RStudio, and have included a pretty useful debugger to boot. <code>RcppArmadillo</code> is an add-on package that gives you access to tons of useful linear algebra functionality in C++. In particular it makes passing in and working with arrays, matrices and vectors pretty easy. Here are some resources to get you started:</p>
+
+<ul>
+<li>The official website for Rcpp is -- <a href="http://www.rcpp.org/">http://www.rcpp.org/</a></li>
+<li>Dirk Edelbuettel has a great site for all things R check out the code and blog sections. He is the creator of the Rcpp package among many others. Here is the link: <a href="http://dirk.eddelbuettel.com/">http://dirk.eddelbuettel.com/</a></li>
+<li>Hadley Wickham's Advanced R book has a nice chapter on Rcpp available here: <a href="http://adv-r.had.co.nz/Rcpp.html">http://adv-r.had.co.nz/Rcpp.html</a></li>
+<li>You can check out the Armadillo docs here: <a href="http://arma.sourceforge.net/docs.html">http://arma.sourceforge.net/docs.html</a>. This is where I go to look up functions to see how to use them or if they exist.</li>
+</ul>
+
+<h2>Getting started</h2>
+
+<p>To get started writing C++ code using Rcpp, you will definitely want to check out the short tutorial at <a href="https://support.rstudio.com/hc/en-us/articles/200486088-Using-Rcpp-with-RStudio">this link</a>, which provides some nice examples of how to write a C++ function and debug it using RStudio. The basic idea can be illustrated in two screenshots. We start by creating a new file in RStudio by clicking on the <strong>doc+</strong> icon in the top left corner of the screen and select <strong>C++ File</strong> from the drop down menu.  </p>
+
+<p><img src="./images/Rcpp1.png" alt="oops!" title="" />  </p>
+
+<p>A sample <em>timesTwo</em>* C++ program will pop up. You will now need to save that file somewhere. Once you have done so, you can click on the <strong>Source</strong> button and you will see that RStudio automatically calls <code>Rcpp::sourceCpp()</code> on the file.  </p>
+
+<p><img src="./images/Rcpp2.png" alt="oops!" title="" />  </p>
+
+<p>This will compile the function and make it so we can access the C++ code from R -- super easy and handy! This is all we need to get started. You will inevitably encounter errors and probably want to distribute your code, but for now, you can simply have access to blazing fast C++ functions on your own computer. Here is your new function:</p>
+
+<pre><code class="language-cpp">#include &lt;Rcpp.h&gt;
+using namespace Rcpp;
+
+// This is a simple example of exporting a C++ function to R. You can
+// source this function into an R session using the Rcpp::sourceCpp 
+// function (or via the Source button on the editor toolbar). Learn
+// more about Rcpp at:
+//
+//   http://www.rcpp.org/
+//   http://adv-r.had.co.nz/Rcpp.html
+//   http://gallery.rcpp.org/
+//
+
+// [[Rcpp::export]]
+NumericVector timesTwo(NumericVector x) {
+    return x * 2;
+}
+
+// You can include R code blocks in C++ files processed with sourceCpp
+// (useful for testing and development). The R code will be automatically 
+// run after the compilation.
+//
+
+/*** R
+timesTwo(42)
+*/
+</code></pre>
+
+<h2>The Armadillo data structures + a template function</h2>
+
+<p>The Armadillo data structures provided by the <code>RcppArmadillo</code> package are really nice and easy to use, but they are also smart to use right off the bat. The base <code>Rcpp</code> package provides its own data structures that can be passed easily between R and C++, but so can the Armadillo data structures. Additionally, the Armadillo data structures are native C++ data structures while the Rcpp data structures are "shallow". What this means is that if you are doing tons of writing to really large Rcpp data structures (say writing lots of big matrices to an <code>Rcpp::List</code> object of length 100,000) you can actually run into some serious and very difficult to diagnose segfaults and other bad errors. I ran into a number of very hard to debug problems with by Rcpp code failing after running for several hours while working on the first version of a big machine learning algorithm a few years back, but after switching to Armadillo data structures, these issue went away. Lets take a look at some of the dat structures you can pass in. What follows is essentially the template I use for pretty much all of my Rcpp functions. </p>
+
+<pre><code class="language-cpp">#include &lt;RcppArmadillo.h&gt;
+//[[Rcpp::depends(RcppArmadillo)]]
+using namespace Rcpp;
+//[[Rcpp::export]]
+List My_Function(
+    double my_double,
+    int some_number,
+    arma::vec a_vector,
+    arma::mat example_matrix,
+    arma::cube my_array,
+    List some_vectors
+    ){
+        double new_double = 100*my_double;
+
+        List to_return(1);
+        to_return[0] = new_double;
+        return to_return;
+     }
+</code></pre>
+
+<p>Note that you no longer use the:</p>
+
+<pre><code class="language-cpp">#include &lt;Rcpp.h&gt;
+</code></pre>
+
+<p>statement as in the example code provided by RStudio, but replace it with:</p>
+
+<pre><code class="language-cpp">#include &lt;RcppArmadillo.h&gt;
+//[[Rcpp::depends(RcppArmadillo)]]
+</code></pre>
+
+<p>Some other things to note:</p>
+
+<ul>
+<li><p>This statement tells us that we can call any Rcpp constructs by their given name without the <code>Rcpp::</code> prefix:  </p>
+
+<pre><code class="language-cpp">using namespace Rcpp;
+</code></pre></li>
+<li><p>We also put one of these statements before each function we want to make available to R:  </p>
+
+<pre><code class="language-cpp">//[[Rcpp::export]]
+</code></pre>
+
+<p>We can also define multiple C++ functions in the same file (not necessarily recommended unless some of them will be used by the main function), so we can put one in front of each one we want to make visible.</p></li>
+</ul>
+
+<p>Now lets take a look at the different objects we can pass in. Note that for all of them, we have to specify their type as we define the argument. This is a feature of C++ that is different from R where we just create objects without having to specify their type. </p>
+
+<ul>
+<li><p>For <strong>decimal numbers</strong> like <code>1.2347</code> we need to use the <code>double</code> declaration, followed by the name of the argument (e.g.. <code>my_double</code>)  </p></li>
+<li><p>For <strong>integers</strong> (whole numbers) like <code>26</code> we use the <code>int</code> declaration, followed by the argument.  </p></li>
+<li><p>For <strong>numeric vectors</strong>, we use the <code>arma::vec</code> declaration, followed by the argument. This code should crash if you try to pass in anything other than a numeric vector  (can contain doubles or integers).  </p></li>
+<li><p>For <strong>numeric matrices</strong>, we use the <code>arma::mat</code> declaration, followed by the argument. Again, make sure it is just numbers in there.  </p></li>
+<li><p>Things used to be a bit trickier for <strong>arrays</strong> (3d or greater). What gets constructed in c++ is an <code>arma::cube</code>, but we had to pass in a <code>NumericVector</code> object which then got turned into an <code>arma::cube</code> internally using the following block of code. This seems a bit odd but it works if you are using an older version of Rcpp. However, since around 2016, it has been possible to simply pass in an <code>arma::cube</code> directly. However, if you ever run into a problem, this code can be a nice workaround: </p>
+
+<pre><code class="language-cpp">IntegerVector dim = array.attr("dim"); 
+arma::cube my_array(array.begin(),dim[0], dim[1], dim[2], false);
+</code></pre></li>
+<li><p>Finally, we can pass in <strong>lists</strong> of numbers, vectors or matrices (or arrays I suppose) using the <code>List</code> data type. This is the only Rcpp data structure I use -- as Armadillo does not provide one, and in general as long as we do not try to do too much with it, we should be ok.   </p></li>
+<li><p>I also tend to specify the return value as a <code>List</code> so that we can stick whatever values we want in it.   </p>
+
+<pre><code class="language-cpp">List My_Function()
+</code></pre>
+
+<p>This works well and again if you keep it shorter than say 1,000 entries for what you return you should not hit any snags with weird memory stuff.</p></li>
+</ul>
+
+<p>One other important point with C++ is that how you initialize a double/int/vector/matrix/array matters. Under the hood, C++ will just go and grab some spaces in your RAM, and if those spaces have non-zero numbers in them, so will the entries in you vector (for example). This will not matter if you overwrite all of the values right off of the bat, but if you are constructing a distribution or something like that, this can spell trouble! Fortunately Armadillo has the <code class="language-cpp">arma::zeros</code> to come to the rescue.</p>
+
+<pre><code class="language-cpp">arma::vec new_vec = arma::zeros(len);
+arma::mat new_mat = arma::zeros(len,len);
+arma::cube new_array = arma::zeros(len,len,len);
+</code></pre>
+
+<p>One other thing you should note if you have not already is that every line of C++ code must be terminated with a <code>;</code> or the code will not compile. Its just one of those things.</p>
+
+<h2>Some Examples</h2>
+
+<p>Lets take a look at a couple of example Rcpp functions I have written for different applications to start  getting the hang of looping and other related concepts.Here is a function that I wrote about in a blog post <a href="http://www.mjdenny.com/blog.html#4-5-15">here</a>, which calculates the mutual information of an arbitrary joint distribution.</p>
+
+<p><img src="./images/mieq.jpg" alt="oops!" title="" /> </p>
+
+<p>You can read more about mutual information in that post, or by checking out the <a href="http://en.wikipedia.org/wiki/Mutual_information">wikipedia page</a>, but what is important is that we have to traverse all the entries of a matrix and calculate some quantity. Note that we will need to use loops, which are defined as follows in C++ :</p>
+
+<pre><code class="language-cpp">for(int i = 0; i &lt; N; ++i){
+    //do some stuff
+}
+</code></pre>
+
+<p>Lets take a look at the function:</p>
+
+<pre><code class="language-cpp">#include &lt;RcppArmadillo.h&gt;
+#include &lt;cmath.h&gt;
+//[[Rcpp::depends(RcppArmadillo)]]
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double Mutual_Information(
+    arma::mat joint_dist
+    ){
+        joint_dist = joint_dist/sum(sum(joint_dist));
+        double mutual_information = 0;
+        int num_rows = joint_dist.n_rows;
+        int num_cols = joint_dist.n_cols;
+        arma::mat colsums = sum(joint_dist,0);
+        arma::mat rowsums = sum(joint_dist,1);
+        for(int i = 0; i &lt; num_rows; ++i){
+           for(int j = 0; j &lt;  num_cols; ++j){
+                double temp = log((joint_dist(i,j)/(colsums[j]*rowsums[i])));
+                if(!std::isfinite(temp)){
+                    temp = 0;
+                }
+                mutual_information += joint_dist(i,j) * temp; 
+            }
+        } 
+        return mutual_information;    
+    }
+</code></pre>
+
+<p>Another thing to note here is that function returns do not get enclosed in () like they do in R. We can try compiling it and you will see it pop up in the Functions pane of RStudio. Now lets take a look at another function I wrote that finds the unique words in a corpus of documents and counts the number of times each unique word appears.</p>
+
+<pre><code class="language-cpp">#include &lt;RcppArmadillo.h&gt;
+#include &lt;string&gt;
+//[[Rcpp::depends(RcppArmadillo)]]
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+List Count_Words(
+    int number_of_documents,
+    List Document_Words,
+    arma::vec Document_Lengths
+    ){
+    List to_return(3);
+    int total_unique_words = 0;
+    arma::vec unique_word_counts = arma::zeros(250000);
+    std::vector&lt;std::string&gt; unique_words(250000);
+
+    for(int n = 0; n &lt; number_of_documents; ++n){
+        Rcpp::Rcout &lt;&lt; "Current Document: " &lt;&lt; n &lt;&lt; std::endl;
+        int length = Document_Lengths[n];
+        std::vector&lt;std::string&gt; current = Document_Words[n];
+        for(int i = 0; i &lt; length; ++i){
+            int already = 0;
+            int counter = 0;
+            while(already == 0){
+                if(counter == total_unique_words){
+                    unique_words[counter] = current[i];
+                    unique_word_counts[counter] += 1;
+                    total_unique_words += 1;
+                    already = 1;
+                }else{
+                    if(unique_words[counter] == current[i]){
+                        unique_word_counts[counter] += 1;
+                        already  = 1;
+                    }
+                }
+                counter +=1;
+            }
+        }
+    }
+
+    to_return[0] = total_unique_words;
+    to_return[1] = unique_words;
+    to_return[2] = unique_word_counts;
+    return to_return;
+}
+</code></pre>
+
+<p>There are a couple of new things in this function. First, we are printing stuff to the R console using <code>Rcpp::Rcout</code>, a newly introduced function in Rcpp that make printing seamless and easy. We simply have to use <code>&lt;&lt;</code> to separate the things we want to print (which can include variables), and then use an end line statement at the end <code>std::endl</code>. Here is some example code: </p>
+
+<pre><code class="language-cpp">Rcpp::Rcout &lt;&lt; "Variable Value: " &lt;&lt; my_variable &lt;&lt; std::endl;
+</code></pre>
+
+<p>You can find out more information on Rcout by checking out <a href="http://gallery.rcpp.org/articles/using-rcout/">this tutorial</a>. The other new thing this piece of code introduces is the vector of strings, which can be specified by using the <code class="language-cpp">std::vector&lt;std::string&gt;</code> declaration followed by the name of the string vector you want to create. We need to use the standard vector class because as far as I know, the Armadillo vectors do not support strings. One of the cool things we can do is pass in an <code class="language-cpp">Rcpp::List</code> object full of string vectors and then assign each of these vectors to a <code class="language-cpp">std::vector&lt;std::string&gt;</code> C++ object and everything just works. We can also stick these back in a <code>Rcpp::List</code> and then return them to R without any trouble. Here is the example block of code:</p>
+
+<pre><code class="language-cpp">std::vector&lt;std::string&gt; my_string_vector(1000);
+</code></pre>
+
+<h2>Defining Sub-Functions</h2>
+
+<p>While writing a bunch of nested loops is great and all, we may also want to be able to write C++ function that can be used by other C++ functions just like we would with R code. To do this, you will need to define your own <code>namespace</code> before you can define sub-functions to be used by your other functions. This <code>namespace</code> will give a prefix to any functions you define so C++ can know what you are talking about. In the example below, the <code class="language-cpp">cdf()</code> function would get called in my Rcpp program by <code class="language-cpp">mjd::cdf()</code>. These are three functions that calculate the erf, pdf, and cdf of draws from a normal distribution.</p>
+
+<pre><code class="language-cpp">#include &lt;RcppArmadillo.h&gt;
+#include &lt;cmath.h&gt;
+//[[Rcpp::depends(RcppArmadillo)]]
+using namespace Rcpp;
+
+namespace mjd {
+
+    // Returns the erf() of a value (not super precise, but ok)
+    double erf(double x)
+    {  
+     double y = 1.0 / ( 1.0 + 0.3275911 * x);   
+     return 1 - (((((
+            + 1.061405429  * y
+            - 1.453152027) * y
+            + 1.421413741) * y
+            - 0.284496736) * y 
+            + 0.254829592) * y) 
+            * exp (-x * x);      
+    }
+
+    // Returns the probability of x, given the distribution described by mu and sigma.
+    double pdf(double x, double mu, double sigma)
+    {
+      //Constants
+      static const double pi = 3.14159265; 
+      return exp( -1 * (x - mu) * (x - mu) / (2 * sigma * sigma)) / (sigma * sqrt(2 * pi));
+    }
+
+    // Returns the probability of [-inf,x] of a gaussian distribution
+    double cdf(double x, double mu, double sigma)
+    {
+        return 0.5 * (1 + mjd::erf((x - mu) / (sigma * sqrt(2.))));
+    }
+}
+</code></pre>
+
+<p>We can then call these functions within another C++ function as in the following block of code. Again, note that to actually make the function available to R, we need to include an <code class="language-cpp">// [[Rcpp::export]]</code> statement on the line directly before the function definition starts.</p>
+
+<pre><code class="language-cpp">// [[Rcpp::export]]
+double Mutual_Information(
+    double mu,
+    double sigma,
+    double draw
+    ){
+        double cdf_val = mjd::cdf(draw,mu,sigma);
+        return cdf_val;    
+    }
+</code></pre>
+
+<h2>The Boost Library</h2>
+
+<p>While basic C++ (pre ISO 2011) and the Armadillo libraries provide a whole lot of functionality, there are some things we may want to do -- particularly sampling from all sorts of distributions, that base C++ does not do. Fortunately, we can make use of the <a href="http://www.boost.org/doc/libs/">Boost libraries</a> to <a href="http://www.boost.org/doc/libs/1_58_0/doc/html/boost_random/reference.html#boost_random.reference.distributions">sample from all sorts of distributions</a> and a whole bunch of other low level stuff that can be really useful. Eventually, when R switches to using C++ (2011) by default, all of the functionality in the Boost libraries will be included in the C++ <code>std</code> libraries by default, but until then, we can get access to most of this functionality through the <code>BH</code> (short for Boost Headers) package. Once we have called the library, we can then start writing functions using the Boost features as follows. To being with, here is what my C++ file header looks like when using the boost libraries</p>
+
+<pre><code class="language-cpp">// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::depends(BH)]]
+
+#include &lt;RcppArmadillo.h&gt;
+#include &lt;boost/random.hpp&gt;
+#include &lt;boost/random/uniform_real_distribution.hpp&gt;
+#include &lt;math.h&gt;
+#include &lt;cmath&gt;
+
+
+using namespace Rcpp;
+</code></pre>
+
+<p>Now lets look at some common functions we might want to grab from the boost libraries, starting with a random number generator where <code>seed</code> is an integer we pass in from R:</p>
+
+<pre><code class="language-cpp">boost::mt19937 generator(seed);
+</code></pre>
+
+<p>We can also get a discrete distribution from boost:</p>
+
+<pre><code class="language-cpp">boost::random::discrete_distribution&lt;int&gt; distribution (dist.begin(),dist.end());
+int temp = distribution(generator);
+</code></pre>
+
+<p>We can also get a Gaussian distribution as well:</p>
+
+<pre><code class="language-cpp">boost::normal_distribution&lt;double&gt; normdist(mean,var);
+double my_draw = normdist(generator);
+</code></pre>
+
+<p>If we want a continuous uniform distribution we can get one of those as well:</p>
+
+<pre><code class="language-cpp">boost::random::uniform_real_distribution&lt; &gt;  uniform_distribution(0.0,1.0);
+</code></pre>
+
+<p>We can also take a look at the performance of native C++ (enabled by Boost) against <a href="http://adv-r.had.co.nz/Rcpp.html#rcpp-sugar">Rcpp Sugar</a> (essentially R functions made available to C++). We can see from the Gibbs sampler example below (Taken form <a href="http://adv-r.had.co.nz/Rcpp.html">Hadley Wickham's Advanced R chapter</a>) that Native C++ is roughly twice as fast. You can access the <a href="https://github.com/matthewjdenny/ISSR_Data_Science_Summer_Summit_15/blob/master/Scripts/Sugar_vs_Native.cpp">source file here</a></p>
+
+<pre><code class="language-cpp">// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::depends(BH)]]
+#include &lt;RcppArmadillo.h&gt;
+#include &lt;boost/random.hpp&gt;
+#include &lt;boost/random/uniform_real_distribution.hpp&gt;
+#include &lt;boost/random/gamma_distribution.hpp&gt;
+#include &lt;math.h&gt;
+#include &lt;cmath&gt;
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericMatrix gibbs_cpp(int N, int thin) {
+  NumericMatrix mat(N, 2);
+  double x = 0, y = 0;
+
+  for(int i = 0; i &lt; N; i++) {
+    for(int j = 0; j &lt; thin; j++) {
+      x = rgamma(1, 3, 1 / (y * y + 4))[0];
+      y = rnorm(1, 1 / (x + 1), 1 / sqrt(2 * (x + 1)))[0];
+    }
+    mat(i, 0) = x;
+    mat(i, 1) = y;
+  }
+
+  return(mat);
+}
+
+namespace mjd{
+    double rgamma( double shape, double scale, boost::mt19937&amp; rng ) {
+      boost::gamma_distribution&lt;&gt; gd( shape );
+      boost::variate_generator&lt;boost::mt19937&amp;,boost::gamma_distribution&lt;&gt; &gt; var_gamma( rng, gd );
+      return scale*var_gamma();
+    }
+  }
+
+// [[Rcpp::export]]
+arma::mat gibbs_cpp2(int N, int thin) {
+  boost::random::mt19937 generator; 
+  arma::mat mymat = arma::zeros(N, 2);
+  double x = 0, y = 0;
+
+  for(int i = 0; i &lt; N; i++) {
+    for(int j = 0; j &lt; thin; j++) {
+      x = mjd::rgamma( 3, 1/(y * y + 4),generator);
+      boost::normal_distribution&lt;double&gt; normdist(1 / (x + 1),1 / sqrt(2 * (x + 1)));
+      y = normdist(generator);
+    }
+    mymat(i, 0) = x;
+    mymat(i, 1) = y;
+  }
+  return(mymat);
+}
+
+/*** R
+cat("Rcpp Sugar")
+system.time({
+  result1 &lt;- gibbs_cpp(1000000,10)
+})
+#  user  system elapsed 
+# 6.435   0.072   6.640 
+cat("Native C++")
+system.time({
+  result2 &lt;- gibbs_cpp2(1000000,10)[[1]]
+})
+#  user  system elapsed 
+# 3.080   0.031   3.156
+*/
+</code></pre>
+
+<h2>Common Pitfalls</h2>
+
+<p>There are a number of common pitfalls when working with C++ and R. Here is a certainly non-exhaustive list of them.</p>
+
+<ul>
+<li>The number one pitfall I have made while working with C++ and R is forgetting that while R starts vector and matrix indexes from 1, <strong>C++ (along with pretty much every other programming language), starts indexes from zero</strong>, so you need to plan accordingly. This also means if you want the last entry of a vector, you need to subtract one from the length of the vector before using the resulting number as an index.</li>
+<li>You will also get an error message, sometimes fatal (meaning your whole R session will crash), if you try to assign a value to a vector index that does not exist. For example if we have a vector of length 10, and try to assign a number to the 11th index, we will get a fatal error, which can be tricky to diagnose. </li>
+<li><p>Another common error people make is trying to access a C++ variable outside of its <strong>scope</strong>. For example, in R, we can do this:  </p>
+
+<pre><code class="language-cpp">for(i in 1:10){
+    myvar &lt;- i
+}
+cat(myvar)
+# prints "10" to the screen
+</code></pre>
+
+<p>However, in C++, we would get an error message saying no such variable exists. </p>
+
+<pre><code class="language-cpp">for(int i = 0; i &lt; length; ++i){
+    double myvar = i;
+}
+Rcpp::Rcout &lt;&lt; "myvar value: " &lt;&lt; myvar &lt;&lt; std::endl;
+</code></pre>
+
+<p>This is because a variable assigned inside a loop (or any statement enclosed by {}) is not accessible outside of that scope. To access the variable we would need to create it outside of the loop, and then modify it in the loop, as in the following example:  </p>
+
+<pre><code class="language-cpp">double myvar = 0;
+for(int i = 0; i &lt; length; ++i){
+    myvar = i;
+}
+Rcpp::Rcout &lt;&lt; "myvar value: " &lt;&lt; myvar &lt;&lt; std::endl;
+</code></pre>
+
+<p>Scoping can be very tricky, but fortunately the C++ compiler checks implemented by RStudio will help you diagnose these problems. </p></li>
+<li>If you want to end up distributing your C++ code as part of an R package, you will want to make sure you check out <a href="https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Portable-C-and-C_002b_002b-code">this link</a> to help avoid a number of common errors that will trip up the C++ compilers on some of the Linux distros.</li>
+</ul>
+
+<h2 id="Package_Cpp">Adding C++ Code to R Packages</h2>
+
+<p>There are a number of very difficult to diagnose problems you can run into when including C++ code in an R package that you actually intend to publish on CRAN. Some of the most common pitfalls are <a href="https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Portable-C-and-C_002b_002b-code">documented here, in the Writing R Extensions Wiki</a>. Most of these can be totally avoided by sticking to the data structures provided by Rcpp and using <a href="http://adv-r.had.co.nz/Rcpp.html#rcpp-sugar">syntactic sugar</a>, which calls R functions to do things like sampling random variables. </p>
+
+<h3>Some Headers Not Welcome</h3>
+
+<p>It turns out that not all C++ headers are portable. In particular the <code>math.h</code> and <code>cmath</code> headers should not be included in C++ code that will be part of an R package. My understanding of this is that these are very commonly used libraries, and that including one in one of your C++ files may alter the functionality of other libraries. So in general, you should remove these from your code if you want to distribute it on CRAN. In practice (distributing a package on Github, for example) I have not run in to any problems with including these headers.</p>
+
+<pre><code class="language-cpp">#include &lt;math.h&gt;
+#include &lt;cmath&gt;
+</code></pre>
+
+<h3>Using Statements</h3>
+
+<p>Another issue you will need to address is ambiguity in which namespace the functions you use are coming from, if you end up using functions from the  <code>std</code> or <code>boost</code> or <code>armadillo</code> libraries. In particular, the <a href="https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Portable-C-and-C_002b_002b-code">Writing R Extensions document</a> suggests you use <code>using</code> statements when you want to include basic functions like <code>sqrt()</code> or <code>exp()</code>. Where applicable, I have added the following lines of code to my C++ files below the import statements:</p>
+
+<pre><code class="language-cpp">using std::pow;
+using std::exp;
+using std::sqrt;
+using std::log;
+</code></pre>
+
+<p>These cover most of what I need to do as it relates to machine learning, but you will just want to keep in mind which basic functions you tend to use most. This way, you can reference them by their shortened names -- like <code>sqrt()</code> or <code>exp()</code> throughout the program you are writing.</p>
+
+<h3>Integers, ceil(),  and floor()</h3>
+
+<p>It is also very important to keep track of what kind of number the functions you call in C++ expect. This is most important when using the <code>ceil()</code> or  <code>floor()</code> functions which can handle a <code>float</code> or a <code>double</code>, but are not explicitly defined for <code>int</code>'s. Taking the <code>ceil()</code> of an integer will result in an install error on solaris and a note that you should have checked the the <a href="https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Portable-C-and-C_002b_002b-code">Writing R Extensions document</a> from the CRAN maintainers (if you can't tell, this has happened to me). I tend to just use the <code>ceiling()</code> function in R where possible and then pass the result in to my C++ function (this is often useful for making sure you allocate an array of sufficient size if you are only keeping every x'th sample from a Markov chain).</p>
+
+<h3>Assert Statements</h3>
+
+<p>Asserts function much like the <code>stop()</code> function when you put it inside of an <code>if()</code> statement (to check for some bad behavior) in R, where they allow the programmer to check some condition (like that a number is greater than zero, for instance), and if that condition is not met, halt execution and return an error to alert the user that something has gone wrong. The problem is, the even if the code you write will never actually produce a situation that could lead to one of these being triggered, you still cannot put a package up on CRAN that produces one of these WARNINGs when it is built. The reason for this is that when an assert statement triggers in C++, it may lead to an uninformative error or crash R, which is not the appropriate way to handle such things. We therefore have to be careful to make sure these do not pop up. These seem to be the trickiest to deal with as you will often only get an WARNING when you run <code>devtools::check()</code> or <code>R CMD check</code> on your package on certain operating systems (typically Linux distros using the gcc compiler) or Solaris). The tricky thing is that some Linux distros will not throw this WARNING, so I would suggest using <a href="https://travis-ci.org/">travis</a>, which will let you test your package automatically on an Ubuntu system (using gcc) every time you commit your package to Github (which is another great reason to use Git). When this happens, you will get a WARNING that looks like this:</p>
+
+<pre><code class="language-cpp">* checking compiled code ... WARNING
+File ‘GERGM/libs/GERGM.so’:
+Found ‘__assert_fail’, possibly from ‘assert’ (C)
+    Object: ‘Metropolis_Hastings_Sampler.o’
+</code></pre>
+
+<p>What this message says is that there was something tricky going on with the C++ file that was referenced (in the case above, the <code>Metropolis_Hastings_Sampler.cpp</code> file in an R package I was writing) which lead it to produce an <code>__assert_</code> statement when it was compiled into the .o file so that it could actually be run. Unfortunately, we do not get an indication of what was causing the problem. The best way I have found to diagnose this problem is to get access to a system running the OS and compiler that caused the WARNING and then trying to build the package locally on that computer. This is essential because we need to get access to the offending .o file in order to sniff out where the problem is. Once we have tried to build the package on the offending OS using <code>R CMD check</code>, we can then navigate to the <code>PackageName.Rcheck/00_pkg_src/PackageName/src</code> directory and open up the .o file (in my case <code>Metropolis_Hastings_Sampler.o</code>) in a text editor and search for the appropriate assert statement in the file (in my case <code>__assert_fail</code>). Here is an example of the output I found in the process of debugging an R package I was recently working on:</p>
+
+<pre><code class="language-cpp">E19__PRETTY_FUNCTION__^@_GLOBAL__I_Metropolis_Hastings_Sampler.cpp^@_ZStL8__ioinit^@_ZN4RcppL1_E^@_ZN4RcppL5RcoutE^@_ZN4RcppL5RcerrE^@_ZN4armaL9eucl_distE^@_ZN4armaL9maha_distE^@_ZN4armaL9prob_distE^@_ZN4armaL13keep_existingE^@_ZN4armaL13static_subsetE^@_ZN4armaL13static_spreadE^@_ZN4armaL13random_subsetE^@_ZN4armaL13random_spreadE^@_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_c.clone.1^@_ZN4armaL9arma_stopIPKcEEvRKT_^@_ZN4armaL19arma_stop_bad_allocIA34_cEEvRKT_^@_ZN4armaL19arma_stop_bad_allocIA39_cEEvRKT_^@.LC12^@.LC13^@.LC14^@.LC15^@.LC16^@.LC17^@.LC18^@.LC19^@.LC20^@.LC21^@.LC2^@.LC23^@.LC5^@.LC25^@.LC26^@.LC28^@.LC31^@.LC32^@.LC33^@.LC9^@.LC30^@.LC6^@.LC34^@.LC7^@.LC8^@.LC27^@.LC29^@.LC0^@.LC1^@.LC3^@.LC4^@.LC10^@.LC11^@.LC22^@.LC24^@_ZN4Rcpp8internal16NamedPlaceHolderD2Ev^@DW.ref.__gxx_personality_v0^@_ZN4Rcpp8internal16NamedPlaceHolderD1Ev^@_ZN4Rcpp10RstreambufILb1EE8overflowEi^@_GLOBAL_OFFSET_TABLE_^@Rprintf^@_ZN4Rcpp10RstreambufILb1EE6xsputnEPKcl^@_ZN4Rcpp10RstreambufILb1EE4syncEv^@R_FlushConsole^@_ZN4Rcpp10RstreambufILb0EE4syncEv^@_ZN4Rcpp10RstreambufILb0EE8overflowEi^@REprintf^@_ZN4Rcpp10RstreambufILb0EE6xsputnEPKcl^@_ZN4Rcpp12RObject_ImplINS_15PreserveStorageEED2Ev^@R_NilValue^@R_ReleaseObject^@_ZN4Rcpp12RObject_ImplINS_15PreserveStorageEED1Ev^@_ZN4arma3MatIdED2Ev^@free^@_ZN4arma3MatIdED1Ev^@_ZN5boost6random6detail21generate_uniform_realINS0_23mersenne_twister_engineIjLm32ELm624ELm397ELm31ELj2567483615ELm11ELj4294967295ELm7ELj2636928640ELm15ELj4022730752ELm18ELj1812433253EEEdEET0_RT_S5_S5_^@__assert_fail^@_Unwind_Resume^@_ZN4Rcpp20AttributeProxyPolicyINS_12RObject_ImplINS_15PreserveStorageEEEE14AttributeProxyaSINS_9DimensionEEERS5_RKT_^@Rf_allocVector^@Rf_protect^@_ZGVZ7dataptrP7SEXPRECE3fun^@__cxa_guard_acquire^@_ZZ7dataptrP7SEXPRECE3fun^@Rf_unprotect^@Rf_setAttrib^@R_GetCCallable^@__cxa_guard_release^@__cxa_guard_abort^@__gxx_personality_v0^@_ZN3mjd3pdfEddd^@exp^@_ZN3mjd3erfEd^@_
+</code></pre>
+
+<p>Well this is pretty much impossible to read, but if we look closer, we can find out which line of code generate the assert statement by looking at the text directly before the <code>__assert_fail</code> statement. I this case we have:</p>
+
+<pre><code class="language-cpp">@_ZN5boost6random6detail21generate_uniform_realINS0_23mersenne_twister_engineIjLm32ELm624ELm397ELm31ELj2567483615ELm11ELj4294967295ELm7ELj2636928640ELm15ELj4022730752ELm18ELj1812433253EEEdEET0_RT_S5_S5_^@__assert_fail
+</code></pre>
+
+<p>which upon further inspection originated in the <code>generate_uniform_real</code> function. By going and looking up the <a href="http://www.boost.org/doc/libs/master/boost/random/uniform_real_distribution.hpp">header file for this function on the internet</a>, we can see that there are a number of assert statements in the source code. From here we basically have two options:</p>
+
+<ol>
+<li><p>We can try to remove the dependency of our code on this function. This is often the easiest solution and probably the best, as we can just search for other alternatives that do not need to do so much checking. In the example I have been using, I ended up replacing </p>
+
+<pre><code class="language-cpp">boost::random::uniform_real_distribution<double>;  uniform_distribution(0.0,1.0);  
+</code></pre>
+
+<p>which required two endpoints for the distribution that had to be checked to one that did not require any checking, which thus removed the assert statement:</p>
+
+<pre><code class="language-cpp">boost::uniform_01<double> uniform_distribution;
+</code></pre>
+
+<p>solving my problem. This approach is very case specific but can often be a simple and fast workaround.  </p></li>
+<li><p>You can also attempt to rewrite the offending function manually to remove the assert calls from the source code. This is more risky as you now have to do all of the checking yourself, but can also be very rewarding as you get to use exactly the function you wanted to. I ended up doing this for the <a href="http://www.boost.org/doc/libs/1_53_0/boost/random/normal_distribution.hpp">boost <code>normal_distribution</code> function</a> which contains the following line of code: </p>
+
+<pre><code class="language-cpp">BOOST_ASSERT(_sigma >= RealType(0));
+</code></pre>
+
+<p>which was causing gcc to throw a WARNING which R picked up and would not let my package pass <code>R CMD check</code>. I simply removed the offending line of code and then included the header file in my package but under a different namespace (replacing <code>namespace boost {</code> with <code>namespace mjd {</code> in my case) so that the function could now be called using:  </p>
+
+<pre><code class="language-cpp">mjd::normal_distribution<double> normdist(mean,var); 
+</code></pre>
+
+<p>which will give identical performance to the boost version but not throw a WARNING. This just means we need to ensure that we never pass a non-positive variance to the normal distribution, so a check should be done in R or in C++ to make sure this does not happen. </p></li>
+</ol>
+
+</div><!-- end .entry-content -->
+</div><!-- end .postclass -->	
+
+</div>
+ 
+</div><!-- end #wrap -->
+
+<script src="js/prism.js"></script>	
+</body>
+</html>
