@@ -56,7 +56,7 @@ for (i in 1:length(filenames)) {
 
     # We are only going to look at the first 100 bills from each Congress to
     # save time. Alternatively, we could look at all of them:
-    temp <- temp[,1:100]
+    # temp <- temp[,1:100]
     cosponsorship_data[[i]]$raw_data <- temp
 }
 
